@@ -7,8 +7,10 @@ const ModalForm = ({
   showModal,
   editUser,
   createUser,
-  changeCreateToEdit,
   userSelected,
+  setUserSelected,
+  putUser,
+  handleChange
 }) => {
   const {
     handleSubmit,
@@ -18,17 +20,18 @@ const ModalForm = ({
   } = useForm();
 
   const submit = (data) => {
-    createUser(data, reset);
+    editUser ? putUser() : createUser(data, reset);
   };
 
   const resetInputWhenCancel = () => {
-    changeShowModal()
-    reset(EMPTY_FORM_VALUES)
-  }
+    changeShowModal();
+    reset(EMPTY_FORM_VALUES);
+    setUserSelected(null);
+  };
 
   useEffect(() => {
     if (userSelected) {
-      reset(userSelected)
+      reset(userSelected);
     }
   }, [userSelected]);
 
@@ -40,9 +43,9 @@ const ModalForm = ({
     >
       <form
         onSubmit={handleSubmit(submit)}
-        className=" flex flex-col gap-5 bg-[#3C3C3D] p-[50px] rounded-[15px] text-[14px]"
+        className=" flex flex-col gap-1 sm:gap-5 bg-[#3C3C3D] p-[50px] rounded-[15px] text-[14px]"
       >
-        <h2 className="text-[#8EFF8B] font-bold text-2xl mb-8 text-center">
+        <h2 className="text-[#8EFF8B] font-bold text-2xl mb-2 sm:mb-8 text-center">
           {editUser ? "Editar Usuario" : "Crear Usuario"}
         </h2>
         <div className="flex flex-col">
@@ -61,6 +64,7 @@ const ModalForm = ({
                 message: "this field is required",
               },
             })}
+            onChange={handleChange}
           />
           <p className="text-red-500 text-xs">{errors.first_name?.message}</p>
         </div>
@@ -80,6 +84,7 @@ const ModalForm = ({
                 message: "this field is required",
               },
             })}
+            onChange={handleChange}
           />
           <p className="text-red-500 text-xs">{errors.last_name?.message}</p>
         </div>
@@ -99,6 +104,7 @@ const ModalForm = ({
                 message: "this field is required",
               },
             })}
+            onChange={handleChange}
           />
           <p className="text-red-500 text-xs">{errors.email?.message}</p>
         </div>
@@ -119,13 +125,14 @@ const ModalForm = ({
               },
               minLength: {
                 value: 8,
-                message: 'must contain at least 8 characters'
+                message: "must contain at least 8 characters",
               },
               pattern: {
                 value: /(?=.*[A-Z])/,
-                message: 'must contain at least a capital letter characters'
-              }
+                message: "must contain at least a capital letter characters",
+              },
             })}
+            onChange={handleChange}
           />
           <p className="text-red-500 text-xs">{errors.password?.message}</p>
         </div>
@@ -144,14 +151,14 @@ const ModalForm = ({
                 message: "this field is required",
               },
             })}
+            onChange={handleChange}
           />
           <p className="text-red-500 text-xs">{errors.birthday?.message}</p>
         </div>
         <button
-          onClick={changeCreateToEdit}
           className="bg-[#CBFFDA] hover:bg-[#85ff85] transition-all text-[#302F2F] mt-[20px] rounded-[5px] py-2"
         >
-          {editUser ? "Save changes" : "Save user"}
+          {editUser ? "Save changes" : "Create user"}
         </button>
         <button
           type="Button"

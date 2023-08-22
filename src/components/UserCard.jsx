@@ -2,40 +2,27 @@ import React from "react";
 
 const UserCard = ({
   user,
-  setEditUser,
-  EditUser,
-  setShowModal,
-  showModal,
   deleteUserSelected,
   setUserSelected,
   setShowModalDelete,
   showModalDelete,
-  editUserSelected,
+  showEditUserModal,
+  deleteUser
 }) => {
-
-  const showEditUserModal = () => {
-    setEditUser(!EditUser);
-    setShowModal(!showModal);
-    editUserSelected
-      ? setUserSelected(user)
-      : console.log("error for look up the user to edit");
-  };
 
   const changeShowModalDelete = () => {
     setShowModalDelete(!showModalDelete);
-    deleteUserSelected
-      ? setUserSelected(user)
-      : console.log("error for look up the user to delete");
+    setUserSelected(user)
   };
 
   return (
-    <div className="bg-[#808080] w-[350px] sm:w-[450px] my-[50px] flex justify-between p-4 rounded-[10px]">
+    <div className="bg-[#808080] w-[300px] sm:w-[350px] md:w-[450px] my-[50px] flex justify-between p-4 rounded-[10px]">
       <div className="flex flex-col justify-between">
         <h2 className="text-2xl text-[#0F0F2D]">
           {user.first_name} {user.last_name}
         </h2>
         <hr />
-        <div className="flex flex-col gap-5 sm:flex-row sm:py-4">
+        <div className="flex flex-col gap-5 sm:flex md:flex-row sm:py-4">
           <div>
             <h5 className="text-[#D3D3D3]">Email</h5>
             <h5 className="text-white">{user.email}</h5>
@@ -46,10 +33,9 @@ const UserCard = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-row justify-start items-start gap-3">
+      <div className="flex flex-row justify-start items-start gap-1 sm:gap-3">
         <button
           onClick={changeShowModalDelete}
-          id={user.id}
           className="bg-[#ff5757] p-1 rounded-[3px] border-[1px] border-red-500"
         >
           <svg
@@ -68,7 +54,7 @@ const UserCard = ({
           </svg>
         </button>
         <button
-          onClick={showEditUserModal}
+          onClick={()=>showEditUserModal(user)}
           className="bg-white text-[#808080] p-1 rounded-[3px] border-[1px] border-[#737373]"
         >
           <svg

@@ -13,31 +13,28 @@ function App() {
   const [currentUsers, setCurrentUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
-  const [userSelected, setUserSelected] = useState("");
+  const [userSelected, setUserSelected] = useState(null);
   const [editUser, setEditUser] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalSuccessUser, setShowModalSuccessUser] = useState(false);
 
-  // console.log(userSelected);
-
-  const deleteUserSelected = (e) => {
-    e.target.parentElement.id;
+  const showEditUserModal = (user) => {
+    setEditUser(!editUser);
+    setShowModal(!showModal);
+    setUserSelected(user);
   };
 
-  const editUserSelected = () => {
-    e.target.parentElement.id;
+  const handleChange = (e) => {
+    setUserSelected({
+      ...userSelected,
+      [e.target.name]: e.target.value,
+    });
   };
-
-  const idUser = userSelected.id;
 
   const changeShowModal = () => {
     setShowModal(!showModal);
     setShowModalEdit(!showModalEdit);
-    setEditUser(false)
-  };
-
-  const changeCreateToEdit = () => {
-    editUser ? deleteUser() : putUser();
+    setEditUser(false);
   };
 
   const getAllUsers = () => {
@@ -51,43 +48,60 @@ function App() {
     axios
       .post(BASE_URL, newUser)
       .then(
-        ({ data }) => (
-          getAllUsers(),
+        ({ response }) => {
+          getAllUsers()
           reset(EMPTY_FORM_VALUES),
           setShowModal(false),
           setShowModalSuccessUser(true)
-        )
+        }
       )
       .catch((err) => console.log(err));
   };
 
-  const deleteUser = () => {
+  const deleteUser = (idUser) => {
     axios
       .delete(BASE_URL + idUser + "/")
-      .then(({ data }) => getAllUsers())
+      .then(({ data }) => {
+        // La Api no me devuelve el ID del dato eliminado
+        setCurrentUsers(currentUsers.filter((e) => idUser !== e.id));
+        setUserSelected(null)
+        setShowModalDelete(!showModalDelete);
+      })
       .catch((err) => console.log(err));
   };
 
   const putUser = () => {
     axios
-      .put(BASE_URL + idUser + "/")
-      .then(({ data }) => getAllUsers())
+      .put(BASE_URL + userSelected?.id + "/", userSelected)
+      .then(({ data }) => {
+        const newUsers = currentUsers.map((e) => {
+          if (data.id === e.id) {
+            return data;
+          } else {
+            return e;
+          }
+        });
+        setCurrentUsers(newUsers)
+        setShowModal(!showModal), setEditUser(!editUser);
+      })
       .catch((err) => console.log(err));
   };
 
   useEffect(() => {
-    getAllUsers()
+    getAllUsers();
   }, []);
 
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-black text-white">
+    <main className="min-h-screen flex flex-col justify-center items-center text-white">
       <ModalForm
         changeShowModal={changeShowModal}
         showModal={showModal}
         editUser={editUser}
         createUser={createUser}
-        changeCreateToEdit={changeCreateToEdit}
         userSelected={userSelected}
+        setUserSelected={setUserSelected}
+        putUser={putUser}
+        handleChange={handleChange}
       />
       <h2 className="text-[#8EFF8B] font-bold text-2xl mt-[100px] mb-8">
         List of user
@@ -101,15 +115,11 @@ function App() {
 
       <UsersList
         currentUsers={currentUsers}
-        setEditUser={setEditUser}
-        editUser={editUser}
-        setShowModal={setShowModal}
-        showModal={showModal}
-        deleteUserSelected={deleteUserSelected}
         setUserSelected={setUserSelected}
         setShowModalDelete={setShowModalDelete}
         showModalDelete={showModalDelete}
-        editUserSelected={editUserSelected}
+        showEditUserModal={showEditUserModal}
+        deleteUser={deleteUser}
       />
 
       <ModalConfirmDelete
@@ -117,6 +127,8 @@ function App() {
         setShowModalDelete={setShowModalDelete}
         currentUsers={currentUsers}
         deleteUser={deleteUser}
+        setUserSelected={setUserSelected}
+        userSelected={userSelected}
       />
 
       <ModalSuccessToCreateUser
