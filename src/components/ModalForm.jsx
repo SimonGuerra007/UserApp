@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+// import { useForm } from "react-hook-form";
 import { EMPTY_FORM_VALUES } from "../shared/constants";
 
 const ModalForm = ({
@@ -10,17 +10,22 @@ const ModalForm = ({
   userSelected,
   setUserSelected,
   putUser,
-  handleChange
+  handleChange,
+  deleteUser,
+  handleSubmit,
+  register,
+  reset,
+  errors,
 }) => {
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { errors },
-  } = useForm();
+  // const {
+  //   handleSubmit,
+  //   register,
+  //   reset,
+  //   formState: { errors },
+  // } = useForm();
 
   const submit = (data) => {
-    editUser ? putUser() : createUser(data, reset);
+    editUser ? putUser(reset) : createUser(data, reset);
   };
 
   const resetInputWhenCancel = () => {
@@ -155,9 +160,7 @@ const ModalForm = ({
           />
           <p className="text-red-500 text-xs">{errors.birthday?.message}</p>
         </div>
-        <button
-          className="bg-[#CBFFDA] hover:bg-[#85ff85] transition-all text-[#302F2F] mt-[20px] rounded-[5px] py-2"
-        >
+        <button className="bg-[#CBFFDA] hover:bg-[#85ff85] transition-all text-[#302F2F] mt-[20px] rounded-[5px] py-2">
           {editUser ? "Save changes" : "Create user"}
         </button>
         <button

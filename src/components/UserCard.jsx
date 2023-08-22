@@ -2,12 +2,10 @@ import React from "react";
 
 const UserCard = ({
   user,
-  deleteUserSelected,
   setUserSelected,
   setShowModalDelete,
   showModalDelete,
   showEditUserModal,
-  deleteUser
 }) => {
 
   const changeShowModalDelete = () => {

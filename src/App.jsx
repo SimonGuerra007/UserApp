@@ -6,6 +6,7 @@ import ModalForm from "./components/ModalForm";
 import ModalConfirmDelete from "./components/ModalConfirmDelete";
 import ModalSuccessToCreateUser from "./components/ModalSuccessToCreateUser";
 import { EMPTY_FORM_VALUES } from "./shared/constants.js";
+import { useForm } from "react-hook-form";
 
 const BASE_URL = "https://users-crud.academlo.tech/users/";
 
@@ -17,6 +18,13 @@ function App() {
   const [editUser, setEditUser] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalSuccessUser, setShowModalSuccessUser] = useState(false);
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   const showEditUserModal = (user) => {
     setEditUser(!editUser);
@@ -35,6 +43,7 @@ function App() {
     setShowModal(!showModal);
     setShowModalEdit(!showModalEdit);
     setEditUser(false);
+    setUserSelected(null)
   };
 
   const getAllUsers = () => {
@@ -48,7 +57,7 @@ function App() {
     axios
       .post(BASE_URL, newUser)
       .then(
-        ({ response }) => {
+        () => {
           getAllUsers()
           reset(EMPTY_FORM_VALUES),
           setShowModal(false),
@@ -64,13 +73,14 @@ function App() {
       .then(({ data }) => {
         // La Api no me devuelve el ID del dato eliminado
         setCurrentUsers(currentUsers.filter((e) => idUser !== e.id));
-        setUserSelected(null)
         setShowModalDelete(!showModalDelete);
+        reset(EMPTY_FORM_VALUES)
+        
       })
       .catch((err) => console.log(err));
   };
 
-  const putUser = () => {
+  const putUser = (reset) => {
     axios
       .put(BASE_URL + userSelected?.id + "/", userSelected)
       .then(({ data }) => {
@@ -81,8 +91,9 @@ function App() {
             return e;
           }
         });
+        reset(EMPTY_FORM_VALUES)
         setCurrentUsers(newUsers)
-        setShowModal(!showModal), setEditUser(!editUser);
+        setShowModal(!showModal), setUserSelected(null), setShowModalSuccessUser(true)
       })
       .catch((err) => console.log(err));
   };
@@ -102,6 +113,11 @@ function App() {
         setUserSelected={setUserSelected}
         putUser={putUser}
         handleChange={handleChange}
+        deleteUser={deleteUser}
+        handleSubmit={handleSubmit}
+        register={register}
+        reset={reset}
+        errors={errors}
       />
       <h2 className="text-[#8EFF8B] font-bold text-2xl mt-[100px] mb-8">
         List of user
@@ -129,6 +145,7 @@ function App() {
         deleteUser={deleteUser}
         setUserSelected={setUserSelected}
         userSelected={userSelected}
+        reset={reset}
       />
 
       <ModalSuccessToCreateUser
