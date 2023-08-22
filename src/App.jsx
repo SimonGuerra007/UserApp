@@ -19,6 +19,8 @@ function App() {
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalSuccessUser, setShowModalSuccessUser] = useState(false);
 
+  console.log(currentUsers.length);
+
   const {
     handleSubmit,
     register,
@@ -43,27 +45,27 @@ function App() {
     setShowModal(!showModal);
     setShowModalEdit(!showModalEdit);
     setEditUser(false);
-    setUserSelected(null)
+    setUserSelected(null);
   };
 
   const getAllUsers = () => {
     axios
       .get(BASE_URL)
-      .then(({ data }) => setCurrentUsers(data))
+      .then(({ data }) => {
+        setCurrentUsers(data)
+      })
       .catch((err) => console.log(err));
   };
 
   const createUser = (newUser, reset) => {
     axios
       .post(BASE_URL, newUser)
-      .then(
-        () => {
-          getAllUsers()
-          reset(EMPTY_FORM_VALUES),
+      .then(() => {
+        getAllUsers();
+        reset(EMPTY_FORM_VALUES),
           setShowModal(false),
-          setShowModalSuccessUser(true)
-        }
-      )
+          setShowModalSuccessUser(true);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -74,8 +76,7 @@ function App() {
         // La Api no me devuelve el ID del dato eliminado
         setCurrentUsers(currentUsers.filter((e) => idUser !== e.id));
         setShowModalDelete(!showModalDelete);
-        reset(EMPTY_FORM_VALUES)
-        
+        reset(EMPTY_FORM_VALUES);
       })
       .catch((err) => console.log(err));
   };
@@ -91,9 +92,11 @@ function App() {
             return e;
           }
         });
-        reset(EMPTY_FORM_VALUES)
-        setCurrentUsers(newUsers)
-        setShowModal(!showModal), setUserSelected(null), setShowModalSuccessUser(true)
+        reset(EMPTY_FORM_VALUES);
+        setCurrentUsers(newUsers);
+        setShowModal(!showModal),
+          setUserSelected(null),
+          setShowModalSuccessUser(true);
       })
       .catch((err) => console.log(err));
   };
