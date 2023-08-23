@@ -17,12 +17,7 @@ const ModalForm = ({
   reset,
   errors,
 }) => {
-  // const {
-  //   handleSubmit,
-  //   register,
-  //   reset,
-  //   formState: { errors },
-  // } = useForm();
+  
 
   const submit = (data) => {
     editUser ? putUser(reset) : createUser(data, reset);

@@ -37,6 +37,10 @@ function App() {
       ...userSelected,
       [e.target.name]: e.target.value,
     });
+    console.log({
+      ...userSelected,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const changeShowModal = () => {
@@ -50,7 +54,7 @@ function App() {
     axios
       .get(BASE_URL)
       .then(({ data }) => {
-        setCurrentUsers(data)
+        setCurrentUsers(data);
       })
       .catch((err) => console.log(err));
   };
@@ -58,8 +62,14 @@ function App() {
   const createUser = (newUser, reset) => {
     axios
       .post(BASE_URL, newUser)
-      .then(() => {
-        getAllUsers();
+      .then(({ data }) => {
+        currentUsers.push({
+          first_name: newUser.first_name,
+          last_name: newUser.last_name,
+          email: newUser.email,
+          password: newUser.password,
+          birthday: newUser.birthday
+      })
         reset(EMPTY_FORM_VALUES),
           setShowModal(false),
           setShowModalSuccessUser(true);
