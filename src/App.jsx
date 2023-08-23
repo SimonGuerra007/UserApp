@@ -37,10 +37,6 @@ function App() {
       ...userSelected,
       [e.target.name]: e.target.value,
     });
-    console.log({
-      ...userSelected,
-      [e.target.name]: e.target.value,
-    });
   };
 
   const changeShowModal = () => {
