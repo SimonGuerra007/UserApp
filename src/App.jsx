@@ -19,8 +19,6 @@ function App() {
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalSuccessUser, setShowModalSuccessUser] = useState(false);
 
-  console.log(currentUsers.length);
-
   const {
     handleSubmit,
     register,
